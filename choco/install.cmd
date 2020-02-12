@@ -10,7 +10,6 @@ REM --- FE development ---
 call choco install nvm
 call choco install yarn
 call choco install git
-call choco install vscode
 call choco install notepadplusplus
 
 REM --- BE development ---
