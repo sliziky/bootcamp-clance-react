@@ -78,12 +78,15 @@ namespace Bootcamp.WebAPI.Data
 
                 found.Year = entity.Year;
                 found.Title = entity.Title;
+                found.Genres = entity.Genres;
 
                 return found;
             }
-
-            entity.Id = movies.Max(m => m.Id) + 1;
-            movies.Add(entity);
+            else
+            {
+                entity.Id = movies.Max(m => m.Id) + 1;
+                movies.Add(entity);
+            }
 
             return entity;
         }
