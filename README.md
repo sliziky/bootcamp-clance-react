@@ -33,6 +33,10 @@ Open _src/webapi/Bootcamp.WebAPI.sln_ in Visual Studio and run app with Ctrl+F5.
 Go to folder _src/webapp_, open command prompt and type
 
 ```shell
+nvm install 12.16.0
+
+nvm use 12.16.0
+
 yarn install
 
 yarn start
