@@ -28,6 +28,7 @@ namespace Bootcamp.WebAPI
         {
             services.AddTransient<IResponseTransformer, NoResponseTransformer>();
             services.AddTransient<IRepository<Movie>, MovieRepository>();
+            services.AddTransient<IRepository<Genre>, GenreRepository>();
 
             services.AddHttpContextAccessor();
 

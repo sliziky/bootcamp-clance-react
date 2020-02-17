@@ -1,10 +1,10 @@
 import IMovie from "../model/IMovie";
-import Axios from "axios";
+import axios from "axios";
 import { API_URL } from "./constants";
 
 class MovieRepository {
   getAll = async (): Promise<IMovie[]> => {
-    const { data } = await Axios.get<IMovie[]>(API_URL);
+    const { data } = await axios.get<IMovie[]>(API_URL);
 
     console.log(`[MovieRepository.getAll]: Retrieved data`, data);
 
@@ -12,7 +12,7 @@ class MovieRepository {
   };
 
   save = async (movie: IMovie): Promise<IMovie> => {
-    const response = await Axios.post<IMovie>(API_URL, movie);
+    const response = await axios.post<IMovie>(API_URL, movie);
 
     console.log(`[MovieRepository.getAll]: Retrieved response`, response);
 

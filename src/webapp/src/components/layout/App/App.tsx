@@ -5,6 +5,11 @@ import MovieRepository from "../../../api/moviesRepository";
 import MovieList from "../../movies/MovieList";
 
 /*
+  TODO : re-do via link with constants.ts
+*/
+export const API_URL = "http://localhost:5000/api/movies";
+
+/*
  * "Root" component that encapsulates whole application. State is managed on this level
  * until we accommodate more elegant solution like Redux or MobX.
  */
@@ -29,9 +34,25 @@ const App: React.FC = () => {
    * Handler for saving data (movie). Sending of updated to WebAPI should be made here...
    */
   const saveMovieHandler = (movie: IMovie) => {
+
     console.log(`[App]: Saving movie...`);
 
     setMovies(prevState => {
+
+      fetch(API_URL, {
+        method: 'POST',
+        headers: {'Content-Type':'application/json'},
+        body: JSON.stringify({
+          id: movie.id,
+          title: movie.title,
+          year: Number(movie.year),
+          genre: movie.genres
+        })
+      })
+      .then(response => response.json())
+      .then(json => console.log(json))
+
+
       const newState = [...prevState];
       const index = prevState.findIndex(m => m.id === movie.id);
       if (index > -1) {
@@ -39,6 +60,7 @@ const App: React.FC = () => {
       }
       return [...newState];
     });
+
   };
 
   return (

@@ -1,6 +1,12 @@
-import React, { useState } from "react";
+import React, { useState, useEffect, HtmlHTMLAttributes } from "react";
 import styles from "./MovieEdit.module.scss";
 import IMovie from "../../model/IMovie";
+import axios from 'axios';
+import IGenre from "../../model/IGenre";
+import 'bootstrap/dist/css/bootstrap.min.css';
+import GenreRepository from "../../api/genresRepository";
+
+export const GENRE_URL = "http://localhost:5000/api/genres";
 
 interface IMovieEditProps {
   movie: IMovie;
@@ -21,6 +27,7 @@ const MovieEdit: React.FC<IMovieEditProps> = ({ movie, onMovieSave: onSaveMovie 
     onSaveMovie(editedMovie);
   };
 
+  const [genres, setGenres] = useState<IGenre[]>([]);
   /*
    * Handler for managing changes in <input> elements and incorporating these into edited movie.
    */
@@ -34,6 +41,36 @@ const MovieEdit: React.FC<IMovieEditProps> = ({ movie, onMovieSave: onSaveMovie 
       return newState as IMovie;
     });
   };
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const repo = new GenreRepository();
+      const loadedGenres = await repo.getAll();
+      setGenres(loadedGenres);
+    };
+    fetchData();
+  }, []);
+
+  //TODO redo
+  const shouldBeChecked = (movieGenre : string) => {
+    for( let genre of movie.genres) {
+      if (genre.name === movieGenre) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  const handleCheckboxChange = (genreName: string, e : React.ChangeEvent<HTMLInputElement>) => {
+    var checked = e.target.value;
+    var genre : IGenre = { name: genreName, id: 2};
+    // todo duplication in array
+    if (checked) {
+      movie.genres.push(genre);
+    }
+    //todo remove 
+  }
+
 
   return (
     <>
@@ -52,7 +89,7 @@ const MovieEdit: React.FC<IMovieEditProps> = ({ movie, onMovieSave: onSaveMovie 
             />
           </div>
           <div className="form-group">
-            <label htmlFor="tbxYear">Title</label>
+            <label htmlFor="tbxYear">Year</label>
             <input
               className="form-control"
               type="number"
@@ -62,13 +99,24 @@ const MovieEdit: React.FC<IMovieEditProps> = ({ movie, onMovieSave: onSaveMovie 
               onChange={inputChangeHandler}
             />
           </div>
+
+          <div className="form-group">
+          <label htmlFor="tbxGenre">Genre</label>
+          <ul>
+              {genres.map((item) => 
+              <li>
+                <label>{item.name}<input type="checkbox" name="check" defaultChecked={shouldBeChecked(item.name)} onChange={e => handleCheckboxChange(item.name, e)}/></label>
+              </li>)}
+           </ul>
+          </div>
         </form>
       </div>
+
       <div className="card-footer">
         <button
           type="button"
           className="btn btn-sm btn-primary"
-          data-movie-id={movie.id.toString()}
+          data-movie-id={movie.id}
           onClick={movieSaveHandler}
         >
           Save
