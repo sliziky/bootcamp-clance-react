@@ -46,7 +46,7 @@ const App: React.FC = () => {
           id: movie.id,
           title: movie.title,
           year: Number(movie.year),
-          genre: movie.genres
+          genres: movie.genres
         })
       })
       .then(response => response.json())

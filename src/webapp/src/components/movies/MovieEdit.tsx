@@ -1,11 +1,11 @@
 import React, { useState, useEffect, HtmlHTMLAttributes } from "react";
 import styles from "./MovieEdit.module.scss";
 import IMovie from "../../model/IMovie";
-import axios from 'axios';
+import axios from "axios";
 import IGenre from "../../model/IGenre";
-import 'bootstrap/dist/css/bootstrap.min.css';
+import "bootstrap/dist/css/bootstrap.min.css";
 import GenreRepository from "../../api/genresRepository";
-
+import GenreEdit from "../genres/GenreEdit";
 export const GENRE_URL = "http://localhost:5000/api/genres";
 
 interface IMovieEditProps {
@@ -19,6 +19,7 @@ interface IMovieEditProps {
  */
 const MovieEdit: React.FC<IMovieEditProps> = ({ movie, onMovieSave: onSaveMovie }) => {
   const [editedMovie, setEditedMovie] = useState<IMovie>({ ...movie });
+  
 
   /*
    * Handler for saving movie. Passes signal to parent component.
@@ -51,26 +52,9 @@ const MovieEdit: React.FC<IMovieEditProps> = ({ movie, onMovieSave: onSaveMovie 
     fetchData();
   }, []);
 
-  //TODO redo
-  const shouldBeChecked = (movieGenre : string) => {
-    for( let genre of movie.genres) {
-      if (genre.name === movieGenre) {
-        return true;
-      }
-    }
-    return false;
-  }
-
-  const handleCheckboxChange = (genreName: string, e : React.ChangeEvent<HTMLInputElement>) => {
-    var checked = e.target.value;
-    var genre : IGenre = { name: genreName, id: 2};
-    // todo duplication in array
-    if (checked) {
-      movie.genres.push(genre);
-    }
-    //todo remove 
-  }
-
+  const onCheckboxChecked = (genre: IGenre, checked: boolean) => {
+    var checked = editedMovie.genres.includes(genre);
+  };
 
   return (
     <>
@@ -101,24 +85,14 @@ const MovieEdit: React.FC<IMovieEditProps> = ({ movie, onMovieSave: onSaveMovie 
           </div>
 
           <div className="form-group">
-          <label htmlFor="tbxGenre">Genre</label>
-          <ul>
-              {genres.map((item) => 
-              <li>
-                <label>{item.name}<input type="checkbox" name="check" defaultChecked={shouldBeChecked(item.name)} onChange={e => handleCheckboxChange(item.name, e)}/></label>
-              </li>)}
-           </ul>
+            <label htmlFor="tbxGenre">Genre</label>
+            <GenreEdit movie={editedMovie} onCheckboxChecked={onCheckboxChecked} />
           </div>
         </form>
       </div>
 
       <div className="card-footer">
-        <button
-          type="button"
-          className="btn btn-sm btn-primary"
-          data-movie-id={movie.id}
-          onClick={movieSaveHandler}
-        >
+        <button type="button" className="btn btn-sm btn-primary" data-movie-id={movie.id} onClick={movieSaveHandler}>
           Save
         </button>
       </div>

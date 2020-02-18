@@ -78,6 +78,7 @@ namespace Bootcamp.WebAPI.Data
 
                 found.Year = entity.Year;
                 found.Title = entity.Title;
+                
                 found.Genres = entity.Genres;
 
                 return found;
