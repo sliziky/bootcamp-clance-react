@@ -2,13 +2,15 @@ import React, { useState, useEffect, HtmlHTMLAttributes } from "react";
 import IMovie from "../../model/IMovie";
 import IGenre from "../../model/IGenre";
 import "bootstrap/dist/css/bootstrap.min.css";
+import { ListGroup, ListGroupItem } from "react-bootstrap";
 import GenreRepository from "../../api/genresRepository";
 
-export const GENRE_URL = "http://localhost:5000/api/genres";
+/*
+    Move checkbox stuff into MovieEdit? 
+*/
 
 interface IGenreListProps {
   movie: IMovie;
-  onCheckboxChecked: (genre: IGenre, checked: boolean) => void;
 }
 
 const matchGenreToId: Record<string, number> = {
@@ -18,16 +20,11 @@ const matchGenreToId: Record<string, number> = {
   "Sci-fi": 4
 };
 
-const GenreEdit: React.FC<IGenreListProps> = ({ movie, onCheckboxChecked }) => {
+const GenreEdit: React.FC<IGenreListProps> = ({ movie }) => {
   const [genres, setGenres] = useState<IGenre[]>([]);
-
-  var checked: Record<string, boolean> = {
-    Fantasy: false,
-    Action: false,
-    Adventure: false,
-    "Sci-fi": false
-  };
-
+  /*
+    Probably not the best idea to get genres every time
+  */
   useEffect(() => {
     const fetchData = async () => {
       const repo = new GenreRepository();
@@ -37,38 +34,39 @@ const GenreEdit: React.FC<IGenreListProps> = ({ movie, onCheckboxChecked }) => {
     fetchData();
   }, []);
 
-  const genreAlreadyAdded = (genre : IGenre) => {
-      return movie.genres.find(i => i.id === genre.id) !== undefined;
-  }
+  /*
+    Better aproach to remember checked boxes than map?
+  */
+  var checked: Record<string, boolean> = {
+    Fantasy: false,
+    Action: false,
+    Adventure: false,
+    "Sci-fi": false
+  };
 
-  const myIndex = (genres : IGenre[], genre : IGenre) => {
-      for (var i = 0; i < genres.length; ++i) {
-        if (genres[i].id === genre.id) {
-            return i;
-        }
-      }
-      return -1;
-  }
+  const genreAlreadyAdded = (genre: IGenre) => {
+    return movie.genres.find(i => i.id === genre.id) !== undefined;
+  };
 
   const handleCheckboxChange = (genreName: string, e: React.ChangeEvent<HTMLInputElement>) => {
+    e.preventDefault();
+
     checked[genreName] = !checked[genreName];
     var wantsToAddGenre = checked[genreName];
     var wantsToDeleteGenre = !wantsToAddGenre;
     var genre: IGenre = { name: genreName, id: matchGenreToId[genreName] };
     var genreAdded = genreAlreadyAdded(genre);
-    if (wantsToAddGenre && !genreAdded) {
-        movie.genres.push(genre);
-      }
-      else if (wantsToDeleteGenre && genreAdded) {
-        const index = myIndex(movie.genres,genre);
-        if (index > -1) {
-          movie.genres.splice(index, 1);
-        }
-      }
-  };
 
-  //TODO redo
-  const shouldBeChecked = (movieGenre: string) => {
+    if (wantsToAddGenre && !genreAdded) {
+      movie.genres.push(genre);
+    } else if (wantsToDeleteGenre && genreAdded) {
+      const index = movie.genres.findIndex(g => g.id === genre.id);
+      if (index > -1) {
+        movie.genres.splice(index, 1);
+      }
+    }
+  };
+  const shouldBeDefaultChecked = (movieGenre: string) => {
     for (let genre of movie.genres) {
       if (genre.name === movieGenre) {
         checked[genre.name] = true;
@@ -80,23 +78,30 @@ const GenreEdit: React.FC<IGenreListProps> = ({ movie, onCheckboxChecked }) => {
 
   return (
     <>
-      <ul>
-        {genres.map(item => (
-          <li>
-            <label>
+      <label htmlFor="tbxGenre">Genre</label>
+      <ListGroup>
+        {genres.map((item, i) => (
+          <label>
+            <ListGroupItem
+              key={i}
+              active={shouldBeDefaultChecked(item.name)}
+              onClick={e => handleCheckboxChange(item.name, e)}
+            >
               {item.name}
-              <input
-                type="checkbox"
-                name="check"
-                defaultChecked={shouldBeChecked(item.name)}
-                onChange={e => handleCheckboxChange(item.name, e)}
-              />
-            </label>
-          </li>
+            </ListGroupItem>
+          </label>
         ))}
-      </ul>
+      </ListGroup>
     </>
   );
 };
 
 export default GenreEdit;
+/*
+              <input
+                type="checkbox"
+                name="check"
+                defaultChecked={shouldBeDefaultChecked(item.name)}
+                onChange={e => handleCheckboxChange(item.name, e)}
+              />
+*/

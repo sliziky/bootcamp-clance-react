@@ -1,10 +1,6 @@
-import React, { useState, useEffect, HtmlHTMLAttributes } from "react";
-import styles from "./MovieEdit.module.scss";
+import React, { useState } from "react";
 import IMovie from "../../model/IMovie";
-import axios from "axios";
-import IGenre from "../../model/IGenre";
 import "bootstrap/dist/css/bootstrap.min.css";
-import GenreRepository from "../../api/genresRepository";
 import GenreEdit from "../genres/GenreEdit";
 export const GENRE_URL = "http://localhost:5000/api/genres";
 
@@ -28,7 +24,6 @@ const MovieEdit: React.FC<IMovieEditProps> = ({ movie, onMovieSave: onSaveMovie 
     onSaveMovie(editedMovie);
   };
 
-  const [genres, setGenres] = useState<IGenre[]>([]);
   /*
    * Handler for managing changes in <input> elements and incorporating these into edited movie.
    */
@@ -43,18 +38,6 @@ const MovieEdit: React.FC<IMovieEditProps> = ({ movie, onMovieSave: onSaveMovie 
     });
   };
 
-  useEffect(() => {
-    const fetchData = async () => {
-      const repo = new GenreRepository();
-      const loadedGenres = await repo.getAll();
-      setGenres(loadedGenres);
-    };
-    fetchData();
-  }, []);
-
-  const onCheckboxChecked = (genre: IGenre, checked: boolean) => {
-    var checked = editedMovie.genres.includes(genre);
-  };
 
   return (
     <>
@@ -85,8 +68,7 @@ const MovieEdit: React.FC<IMovieEditProps> = ({ movie, onMovieSave: onSaveMovie 
           </div>
 
           <div className="form-group">
-            <label htmlFor="tbxGenre">Genre</label>
-            <GenreEdit movie={editedMovie} onCheckboxChecked={onCheckboxChecked} />
+            <GenreEdit movie={editedMovie} />
           </div>
         </form>
       </div>
