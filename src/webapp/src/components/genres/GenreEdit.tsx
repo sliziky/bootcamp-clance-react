@@ -34,7 +34,7 @@ const GenreEdit: React.FC<IGenreListProps> = ({ movie }) => {
       setGenres(loadedGenres);
     };
     fetchData();
-  });
+  }, []);
 
   const genreAlreadyAdded = (genre: IGenre) => {
     return movie.genres.find(i => i.id === genre.id) !== undefined;
