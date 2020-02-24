@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import IMovie from "../../model/IMovie";
 import "bootstrap/dist/css/bootstrap.min.css";
 import GenreEdit from "../genres/GenreEdit";
+import IGenre from "../../model/IGenre";
 export const GENRE_URL = "http://localhost:5000/api/genres";
 
 interface IMovieEditProps {
@@ -38,6 +39,14 @@ const MovieEdit: React.FC<IMovieEditProps> = ({ movie, onMovieSave: onSaveMovie 
     });
   };
 
+  const genreChanged = (genres: IGenre[]) => {
+    setEditedMovie(prevState => {
+      const newState: IMovie = { ...prevState };
+      newState.genres = genres;
+      return newState;
+    });
+  }
+
 
   return (
     <>
@@ -68,7 +77,7 @@ const MovieEdit: React.FC<IMovieEditProps> = ({ movie, onMovieSave: onSaveMovie 
           </div>
 
           <div className="form-group">
-            <GenreEdit movie={editedMovie} />
+            <GenreEdit currentGenres={editedMovie.genres} onGenreChange={genreChanged} />
           </div>
         </form>
       </div>
