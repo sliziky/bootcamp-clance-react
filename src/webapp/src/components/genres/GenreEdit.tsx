@@ -39,7 +39,7 @@ const GenreEdit: React.FC<IGenreListProps> = ({ currentGenres, onGenreChange }) 
 
   return (
     <>
-      <label htmlFor="tbxGenre">Genre</label>
+      <label htmlFor="tbxGenre"><strong>Genre</strong></label>
       <ListGroup>
         {allGenres.map((genre, i) => (
           <label key={i}>

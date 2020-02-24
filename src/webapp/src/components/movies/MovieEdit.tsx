@@ -3,20 +3,21 @@ import IMovie from "../../model/IMovie";
 import "bootstrap/dist/css/bootstrap.min.css";
 import GenreEdit from "../genres/GenreEdit";
 import IGenre from "../../model/IGenre";
+import { Button } from "react-bootstrap";
 export const GENRE_URL = "http://localhost:5000/api/genres";
 
 interface IMovieEditProps {
   movie: IMovie;
 
   onMovieSave: (movie: IMovie) => void;
+  onCancelEdit: () => void;
 }
 
 /*
  * Component for editing information about particular movie, that is passed in props.
  */
-const MovieEdit: React.FC<IMovieEditProps> = ({ movie, onMovieSave: onSaveMovie }) => {
+const MovieEdit: React.FC<IMovieEditProps> = ({ movie, onMovieSave: onSaveMovie, onCancelEdit: cancelEdit }) => {
   const [editedMovie, setEditedMovie] = useState<IMovie>({ ...movie });
-  
 
   /*
    * Handler for saving movie. Passes signal to parent component.
@@ -45,8 +46,12 @@ const MovieEdit: React.FC<IMovieEditProps> = ({ movie, onMovieSave: onSaveMovie 
       newState.genres = genres;
       return newState;
     });
-  }
+  };
 
+  const cancelHandler = () => {
+    setEditedMovie(movie);
+    cancelEdit();
+  };
 
   return (
     <>
@@ -54,7 +59,9 @@ const MovieEdit: React.FC<IMovieEditProps> = ({ movie, onMovieSave: onSaveMovie 
       <div className="card-body" style={{ padding: "15px" }}>
         <form onSubmit={e => e.preventDefault()}>
           <div className="form-group">
-            <label htmlFor="tbxMovieName">Title</label>
+            <label htmlFor="tbxMovieName">
+              <strong>Title</strong>
+            </label>
             <input
               className="form-control"
               type="text"
@@ -65,7 +72,9 @@ const MovieEdit: React.FC<IMovieEditProps> = ({ movie, onMovieSave: onSaveMovie 
             />
           </div>
           <div className="form-group">
-            <label htmlFor="tbxYear">Year</label>
+            <label htmlFor="tbxYear">
+              <strong>Year</strong>
+            </label>
             <input
               className="form-control"
               type="number"
@@ -83,9 +92,15 @@ const MovieEdit: React.FC<IMovieEditProps> = ({ movie, onMovieSave: onSaveMovie 
       </div>
 
       <div className="card-footer">
-        <button type="button" className="btn btn-sm btn-primary" data-movie-id={movie.id} onClick={movieSaveHandler}>
-          Save
-        </button>
+        <div className="btn-toolbar">
+          <Button className="mr-5" variant="primary" data-movie-id={movie.id} onClick={movieSaveHandler}>
+            Save
+          </Button>
+
+          <Button className="ml-auto" variant="danger" onClick={cancelHandler}>
+            Cancel
+          </Button>
+        </div>
       </div>
     </>
   );

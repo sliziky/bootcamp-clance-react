@@ -33,10 +33,14 @@ const MovieContainer: React.FC<IMovieContainerProps> = ({ movie, onMovieSave }) 
     setEditMode(true);
   };
 
+  const cancelEditMovieHandler = () => {
+    setEditMode(false);
+  }
+
   return (
     <div className={`card ${styles.movieContainer}`}>
       {editMode ? (
-        <MovieEdit movie={movie} onMovieSave={saveMovieHandler} />
+        <MovieEdit movie={movie} onMovieSave={saveMovieHandler} onCancelEdit={cancelEditMovieHandler} />
       ) : (
         <MovieDisplay movie={movie} onMovieEdit={editMovieHandler} />
       )}
