@@ -47,7 +47,7 @@ namespace Bootcamp.WebAPI.Data
                 },
                 new Movie
                 {
-                    Id = 3, 
+                    Id = 3,
                     Title = "Lord of the Rings: The Return of the King",
                     Year = 2003,
                     ThumbnailUrl = "https://m.media-amazon.com/images/M/MV5BNzA5ZDNlZWMtM2NhNS00NDJjLTk4NDItYTRmY2EwMWZlMTY3XkEyXkFqcGdeQXVyNzkwMjQ5NzM@._V1_SY1000_CR0,0,675,1000_AL_.jpg",
@@ -78,7 +78,6 @@ namespace Bootcamp.WebAPI.Data
 
                 found.Year = entity.Year;
                 found.Title = entity.Title;
-                
                 found.Genres = entity.Genres;
 
                 return found;

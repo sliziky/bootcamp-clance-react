@@ -13,18 +13,20 @@ interface IGenreListProps {
   movie: IMovie;
 }
 
-const matchGenreToId: Record<string, number> = {
-  Fantasy: 1,
-  Action: 2,
-  Adventure: 3,
-  "Sci-fi": 4
-};
-
 const GenreEdit: React.FC<IGenreListProps> = ({ movie }) => {
   const [genres, setGenres] = useState<IGenre[]>([]);
+  
+  const testingMap = {
+    0: true,
+    1: true,
+    2: false,
+    3: false
+  }
   /*
     Probably not the best idea to get genres every time
   */
+  let genreChecked = new Map<number, boolean>();
+  
   useEffect(() => {
     const fetchData = async () => {
       const repo = new GenreRepository();
@@ -32,30 +34,20 @@ const GenreEdit: React.FC<IGenreListProps> = ({ movie }) => {
       setGenres(loadedGenres);
     };
     fetchData();
-  }, []);
-
-  /*
-    Better aproach to remember checked boxes than map?
-  */
-  var checked: Record<string, boolean> = {
-    Fantasy: false,
-    Action: false,
-    Adventure: false,
-    "Sci-fi": false
-  };
+  });
 
   const genreAlreadyAdded = (genre: IGenre) => {
     return movie.genres.find(i => i.id === genre.id) !== undefined;
   };
 
-  const handleCheckboxChange = (genreName: string, e: React.ChangeEvent<HTMLInputElement>) => {
-    e.preventDefault();
 
-    checked[genreName] = !checked[genreName];
-    var wantsToAddGenre = checked[genreName];
+  const handleCheckboxChange = (genre: IGenre, e: React.ChangeEvent<HTMLInputElement>) => {
+    e.preventDefault();
+    genreChecked.set(genre.id, !genreChecked.get(genre.id));
+    var wantsToAddGenre = genreChecked.get(genre.id);
     var wantsToDeleteGenre = !wantsToAddGenre;
-    var genre: IGenre = { name: genreName, id: matchGenreToId[genreName] };
     var genreAdded = genreAlreadyAdded(genre);
+    testingMap[genre.id - 1] = !testingMap[genre.id - 1];
 
     if (wantsToAddGenre && !genreAdded) {
       movie.genres.push(genre);
@@ -66,28 +58,19 @@ const GenreEdit: React.FC<IGenreListProps> = ({ movie }) => {
       }
     }
   };
-  const shouldBeDefaultChecked = (movieGenre: string) => {
-    for (let genre of movie.genres) {
-      if (genre.name === movieGenre) {
-        checked[genre.name] = true;
-        return true;
-      }
-    }
-    return false;
-  };
 
   return (
     <>
       <label htmlFor="tbxGenre">Genre</label>
       <ListGroup>
-        {genres.map((item, i) => (
+        {genres.map((genre, i) => (
           <label>
             <ListGroupItem
               key={i}
-              active={shouldBeDefaultChecked(item.name)}
-              onClick={e => handleCheckboxChange(item.name, e)}
+              active={testingMap[i]}
+              onClick={e => handleCheckboxChange(genre, e)}
             >
-              {item.name}
+              {genre.name}
             </ListGroupItem>
           </label>
         ))}
