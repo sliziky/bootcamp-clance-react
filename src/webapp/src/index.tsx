@@ -3,7 +3,7 @@
 // Web use React :)
 import React from "react";
 import ReactDOM from "react-dom";
-
+import 'bootstrap/dist/css/bootstrap.min.css';
 // We also use Bootstrap (https://getbootstrap.com/)
 import "bootstrap/dist/css/bootstrap.css";
 import "./index.css";

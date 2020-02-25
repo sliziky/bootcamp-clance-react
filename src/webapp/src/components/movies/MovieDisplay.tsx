@@ -1,7 +1,10 @@
-import React from "react";
+import React, { useEffect } from "react";
 import styles from "./MovieDisplay.module.scss";
 import IMovie from "../../model/IMovie";
-
+import { useState } from "react";
+import "bootstrap/dist/css/bootstrap.min.css";
+import { Button, Card, ListGroup, ListGroupItem } from "react-bootstrap";
+import { Collapse, CardBody } from "reactstrap";
 interface IMovieDisplayProps {
   movie: IMovie;
 
@@ -19,6 +22,19 @@ const MovieDisplay: React.FC<IMovieDisplayProps> = ({ movie, onMovieEdit }) => {
     onMovieEdit(movie);
   };
 
+  const [max, setMax] = useState(0);
+
+  useEffect(() => {
+    const calculateAverageRating = () => {
+      const average = arr => arr.reduce((p, c) => p + c, 0) / arr.length;
+      setMax(Math.round(average(movie.ratings) * 10) / 10);
+    };
+    calculateAverageRating();
+  }, [movie.ratings]);
+
+  const [isOpen, setIsOpen] = useState(false);
+
+  const toggle = () => setIsOpen(!isOpen);
   return (
     <>
       <div className="card-header">{movie.title}</div>
@@ -42,6 +58,19 @@ const MovieDisplay: React.FC<IMovieDisplayProps> = ({ movie, onMovieEdit }) => {
                         <li key={g.id}>{g.name}</li>
                       ))}
                     </ul>
+                  </td>
+                </tr>
+                <tr>
+                  <th><a href="#" onClick={toggle}>Rating</a></th>
+                  <td>
+                    <span>{max}</span>
+                    <Collapse isOpen={isOpen}>
+                      <ListGroup>
+                        <ListGroupItem>Max: <b>{Math.max(...movie.ratings)}</b></ListGroupItem>
+                        <ListGroupItem>Min: <b>{Math.min(...movie.ratings)}</b></ListGroupItem>
+                        <ListGroupItem>Votes: <b>{movie.ratings.length}</b></ListGroupItem>
+                      </ListGroup>
+                    </Collapse>
                   </td>
                 </tr>
               </tbody>

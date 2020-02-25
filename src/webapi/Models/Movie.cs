@@ -15,6 +15,8 @@ namespace Bootcamp.WebAPI.Models
 
         public int? Year { get; set; }
 
+        public ICollection<float> Ratings { get; set; } = new Collection<float>();
+
         public ICollection<Genre> Genres { get; set; } = new Collection<Genre>();
 
         public ICollection<Actor> Actors { get; set; } = new Collection<Actor>();

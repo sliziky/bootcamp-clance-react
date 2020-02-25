@@ -30,9 +30,10 @@ namespace Bootcamp.WebAPI.Data
             {
                 new Movie
                 {
-                    Id = 1, 
+                    Id = 1,
                     Title = "Indiana Jones and the Last Crusade",
                     Year = 1989,
+                    Ratings = new List<float> { 7.5f, 7.8f, 8.2f, 5.9f },
                     ThumbnailUrl = "https://m.media-amazon.com/images/M/MV5BMjNkMzc2N2QtNjVlNS00ZTk5LTg0MTgtODY2MDAwNTMwZjBjXkEyXkFqcGdeQXVyNDk3NzU2MTQ@._V1_SY1000_CR0,0,678,1000_AL_.jpg",
                     Genres = new List<Genre> { genreAction, genreAdventure }
                     
@@ -42,6 +43,7 @@ namespace Bootcamp.WebAPI.Data
                     Id = 2, 
                     Title = "Star Wars IV: A New Hope",
                     Year = 1977,
+                    Ratings = new List<float> { 6.5f, 6.8f, 6.2f, 7.9f },
                     ThumbnailUrl = "https://m.media-amazon.com/images/M/MV5BMDM1NmMxMzItYWUzMC00Yzc2LTk4MzctOTdkNDVhODY2N2MxXkEyXkFqcGdeQXVyNDQ0Mjg4NTY@._V1_SY1000_CR0,0,707,1000_AL_.jpg",
                     Genres = new List<Genre> { genreAction, genreAdventure, genreScifi }
                 },
@@ -50,6 +52,7 @@ namespace Bootcamp.WebAPI.Data
                     Id = 3,
                     Title = "Lord of the Rings: The Return of the King",
                     Year = 2003,
+                    Ratings = new List<float> { 9.5f, 9.2f, 8.7f, 7.9f },
                     ThumbnailUrl = "https://m.media-amazon.com/images/M/MV5BNzA5ZDNlZWMtM2NhNS00NDJjLTk4NDItYTRmY2EwMWZlMTY3XkEyXkFqcGdeQXVyNzkwMjQ5NzM@._V1_SY1000_CR0,0,675,1000_AL_.jpg",
                     Genres = new List<Genre> { genreAdventure, genreFantasy }
                 }
@@ -79,7 +82,7 @@ namespace Bootcamp.WebAPI.Data
                 found.Year = entity.Year;
                 found.Title = entity.Title;
                 found.Genres = entity.Genres;
-
+                found.Ratings = entity.Ratings;
                 return found;
             }
             else

@@ -1,8 +1,12 @@
 import React, { useState, useEffect } from "react";
 import IGenre from "../../model/IGenre";
 import "bootstrap/dist/css/bootstrap.min.css";
-import { ListGroup, ListGroupItem } from "react-bootstrap";
+import { Button, ListGroup, ListGroupItem } from "react-bootstrap";
 import GenreRepository from "../../api/genresRepository";
+import axios from "axios";
+
+
+
 
 interface IGenreListProps {
   currentGenres: IGenre[];
@@ -29,7 +33,6 @@ const GenreEdit: React.FC<IGenreListProps> = ({ currentGenres, onGenreChange }) 
     } else {
       newGenres.splice(foundIndex, 1);
     }
-
     onGenreChange(newGenres);
   };
 
@@ -39,7 +42,9 @@ const GenreEdit: React.FC<IGenreListProps> = ({ currentGenres, onGenreChange }) 
 
   return (
     <>
-      <label htmlFor="tbxGenre"><strong>Genre</strong></label>
+      <label htmlFor="tbxGenre">
+        <strong>Genre</strong>
+      </label>
       <ListGroup>
         {allGenres.map((genre, i) => (
           <label key={i}>
@@ -54,11 +59,3 @@ const GenreEdit: React.FC<IGenreListProps> = ({ currentGenres, onGenreChange }) 
 };
 
 export default GenreEdit;
-/*
-              <input
-                type="checkbox"
-                name="check"
-                defaultChecked={shouldBeDefaultChecked(item.name)}
-                onChange={e => handleCheckboxChange(item.name, e)}
-              />
-*/

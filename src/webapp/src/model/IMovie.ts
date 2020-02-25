@@ -13,4 +13,6 @@ export default interface IMovie {
   thumbnailUrl: string;
 
   genres: IGenre[];
+
+  ratings: number[];
 }

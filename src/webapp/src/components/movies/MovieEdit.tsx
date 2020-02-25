@@ -1,10 +1,9 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import IMovie from "../../model/IMovie";
-import "bootstrap/dist/css/bootstrap.min.css";
 import GenreEdit from "../genres/GenreEdit";
 import IGenre from "../../model/IGenre";
 import { Button } from "react-bootstrap";
-export const GENRE_URL = "http://localhost:5000/api/genres";
+import Rating from "@material-ui/lab/Rating";
 
 interface IMovieEditProps {
   movie: IMovie;
@@ -53,6 +52,22 @@ const MovieEdit: React.FC<IMovieEditProps> = ({ movie, onMovieSave: onSaveMovie,
     cancelEdit();
   };
 
+  const [value, setValue] = useState<number>(2);
+  const [ratingAdded, setRatingAdded] = useState<boolean>(false);
+
+  const onRatingChange = (e: object, v: number | null) => {
+    if (v !== null) {
+      setValue(v);
+    }
+    else {return;}
+    if (ratingAdded) {
+      movie.ratings.pop();
+    }
+    movie.ratings.push(v);
+    
+    if (!ratingAdded) { setRatingAdded(true); }
+  };
+
   return (
     <>
       <div className="card-header">{movie.title}</div>
@@ -87,6 +102,17 @@ const MovieEdit: React.FC<IMovieEditProps> = ({ movie, onMovieSave: onSaveMovie,
 
           <div className="form-group">
             <GenreEdit currentGenres={editedMovie.genres} onGenreChange={genreChanged} />
+          </div>
+
+          <div>
+            <b>Rating</b>
+            <Rating
+              name="pristine"
+              defaultValue={5}
+              precision={0.1}
+              max={10}
+              onChange={(event,newValue) => onRatingChange(event, newValue)}
+            />
           </div>
         </form>
       </div>
